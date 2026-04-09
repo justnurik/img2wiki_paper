@@ -1,6 +1,6 @@
 scraper:
   target_count: 60000
-  user_agent: "EducationalBot/1.1 (contact: aliihann24@gmail.com)"
+  user_agent: "EducationalBot/1.1 (contact: _@gmail.com)"
   output_dir: "data/wiki_dataset"
   concurrency: 10
   min_text_len: 150
@@ -8,7 +8,7 @@ scraper:
 # второй на другой машине
 # scraper:
 #   target_count: 50000
-#   user_agent: "EducationalBot/1.2 (contact: nmoldik@gmail.com)"
+#   user_agent: "EducationalBot/1.2 (contact: _@gmail.com)"
 #   output_dir: "data/vm/wiki_dataset"
 #   concurrency: 15
 #   min_text_len: 150
