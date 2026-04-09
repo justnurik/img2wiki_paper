@@ -1,0 +1,37 @@
+scraper:
+  target_count: 60000
+  user_agent: "EducationalBot/1.1 (contact: aliihann24@gmail.com)"
+  output_dir: "data/wiki_dataset"
+  concurrency: 10
+  min_text_len: 150
+
+# второй на другой машине
+# scraper:
+#   target_count: 50000
+#   user_agent: "EducationalBot/1.2 (contact: nmoldik@gmail.com)"
+#   output_dir: "data/vm/wiki_dataset"
+#   concurrency: 15
+#   min_text_len: 150
+
+merger:
+  source_dirs:
+    - "data/vm/wiki_dataset"
+    - "data/wiki_dataset"
+  train_output: "data/jsons/train_merged.jsonl"
+  val_output: "data/jsons/val_merged.jsonl"
+  train_size: 105000
+  val_size: 5000
+  seed: 42
+
+aug_compute:
+  top_k: 5
+  batch_size: 64
+  output_path: "data/jsons/aug_map.json"
+
+paths:
+  train_jsonl: "data/jsons/train_merged.jsonl"
+  val_jsonl: "data/jsons/val_merged.jsonl"
+  imagenet_dir: "data/imagenet"
+  faiss_index: "data/imagenet/imagenet_300k.faiss"
+  meta_path: "data/imagenet/metadata.json"
+  aug_map: "data/jsons/aug_map.json"

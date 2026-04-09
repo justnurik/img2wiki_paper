@@ -1,0 +1,89 @@
+processor_id:    "openai/clip-vit-base-patch32"
+images_base_dir: "."
+hf_repo:         "jnurik/viki-clip-models"
+
+backends:
+
+  - id: zero_shot
+    label: "Zero-shot"
+    emoji: "🎯"
+    description: >
+      Оригинальный CLIP без какого-либо дообучения.
+      Не знает ничего о Википедии — ищет по общим визуальным признакам.
+    description_en: >
+      Vanilla CLIP with no fine-tuning whatsoever.
+      Knows nothing about Wikipedia — searches by general visual features.
+    is_lora: false
+    checkpoint:       ""
+    faiss_index:      "search_index_img/zero_shot_base/wiki_index.faiss"
+    metadata:         "search_index_img/zero_shot_base/metadata.jsonl"
+    faiss_index_text: "search_index_text/zero_shot_base/wiki_text_index.faiss"
+    metadata_text:    "search_index_text/zero_shot_base/metadata.jsonl"
+
+  - id: freeze_no_aug
+    label: "Projector"
+    emoji: "🧊"
+    description: >
+      Энкодеры заморожены, дообучены только проекционные слои.
+      Самый лёгкий вариант — минимум параметров, быстрое обучение.
+    description_en: >
+      Encoders are frozen; only the projection layers are trained.
+      Lightest variant — fewest parameters, fastest to train.
+    is_lora: false
+    checkpoint:       "checkpoints/clip_lr5e-05_no_aug"
+    faiss_index:      "search_index_img/without_ag_e9/wiki_index.faiss"
+    metadata:         "search_index_img/without_ag_e9/metadata.jsonl"
+    faiss_index_text: "search_index_text/without_ag_e9/wiki_text_index.faiss"
+    metadata_text:    "search_index_text/without_ag_e9/metadata.jsonl"
+
+  - id: freeze_with_aug
+    label: "Projector + Aug"
+    emoji: "🌀"
+    description: >
+      Те же замороженные энкодеры и проекционные слои, но с семантической аугментацией.
+      Во время обучения с вероятностью 0.2 оригинальное фото заменялось
+      на визуально похожее из ImageNet — модель учится быть устойчивее к внешнему виду.
+    description_en: >
+      Same frozen encoders + projection layers, but with semantic augmentation.
+      During training, with 20% probability the original image was replaced
+      by a visually similar ImageNet image — makes the model more appearance-robust.
+    is_lora: false
+    checkpoint:       "checkpoints/clip_lr5e-05_with_aug"
+    faiss_index:      "search_index_img/with_ag_e9/wiki_index.faiss"
+    metadata:         "search_index_img/with_ag_e9/metadata.jsonl"
+    faiss_index_text: "search_index_text/with_ag_e9/wiki_text_index.faiss"
+    metadata_text:    "search_index_text/with_ag_e9/metadata.jsonl"
+
+  - id: dora_clip_loss
+    label: "DoRA part attn"
+    emoji: "⚡"
+    description: >
+      DoRA (Weight-Decomposed LoRA) применён только к части слоёв внимания (q_proj, k_proj).
+      Больше обучаемых параметров, чем у Projector-вариантов.
+    description_en: >
+      DoRA (Weight-Decomposed LoRA) applied to a subset of attention layers (q_proj, k_proj).
+      More trainable parameters than Projector variants.
+    is_lora: true
+    checkpoint:       "checkpoints/epoch_5_CLIP_loss"
+    faiss_index:      "search_index_img/dora_with_ag_e5_clip_loss/wiki_index.faiss"
+    metadata:         "search_index_img/dora_with_ag_e5_clip_loss/metadata.jsonl"
+    faiss_index_text: "search_index_text/dora_with_ag_e5_clip_loss/wiki_text_index.faiss"
+    metadata_text:    "search_index_text/dora_with_ag_e5_clip_loss/metadata.jsonl"
+
+  - id: dora_e9_no_agu_large
+    label: "DoRA full attn"
+    emoji: "🔥"
+    description: >
+      DoRA на всех слоях внимания + полные проекционные слои + аугментация.
+      Максимально обучаемая конфигурация из всех пяти моделей.
+      Это модель по умолчанию — она лучше справляется с разнообразными фотографиями.
+    description_en: >
+      DoRA across all attention layers + full projection layers + augmentation.
+      The most heavily fine-tuned configuration of all five models.
+      Default model — handles the widest variety of photos best.
+    is_lora: true
+    checkpoint:       "checkpoints/latest"
+    faiss_index:      "search_index_img/dora_e9_no_agu_large/wiki_index.faiss"
+    metadata:         "search_index_img/dora_e9_no_agu_large/metadata.jsonl"
+    faiss_index_text: "search_index_text/dora_e9_no_agu_large/wiki_text_index.faiss"
+    metadata_text:    "search_index_text/dora_e9_no_agu_large/metadata.jsonl"

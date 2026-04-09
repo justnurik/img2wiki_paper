@@ -1,0 +1,45 @@
+model:
+  model_id: "openai/clip-vit-base-patch32"
+  freeze_backbones: true
+
+augmentation:
+  enabled: false
+  prob: 0.2
+  mode: "title_text"   # image | title | text | title_text
+  max_top_k: 3
+  random_choice: true
+
+dataloader:
+  batch_size: 128
+  num_workers: 3
+
+optimizer:
+  lr: 3.0e-5
+  weight_decay: 0.025
+
+scheduler:
+  name: "cosine"
+  min_lr: 1.0e-7
+
+lora:
+  enabled: true
+  r: 16
+  lora_alpha: 16
+  use_dora: true
+  dropout: 0.05
+
+  target_modules: ["q_proj", "k_proj", "v_proj", "out_proj"]
+  fully_train_projectors: true
+
+trainer:
+  max_epochs: 10
+  log_every_n_steps: 1
+  epochs_between_updates: 2
+  seed: 42
+  precision: "bf16-mixed"
+  accumulate_grad_batches: 2
+
+paths:
+  export_dir: "./checkpoints"
+  log_dir: "./logs"
+  model_checkpoints_dir: "./checkpoints"

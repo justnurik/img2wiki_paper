@@ -1,0 +1,30 @@
+data:
+  all_jsonl: "data/jsons/all.jsonl"
+  batch_size: 128
+  num_workers: 4
+
+index_settings:
+  target: "text"
+  index_name: "wiki_index.faiss"
+  meta_name: "metadata.jsonl"
+
+models_to_index:
+  - name: "zero_shot_base"
+    checkpoint: "openai/clip-vit-base-patch32"
+    output_dir: "./search_index/zero_shot_base"
+  
+  - name: "no_aug_e9"
+    checkpoint: "checkpoints/clip_lr5e-05_no_aug"
+    output_dir: "./search_index/without_ag_e9"
+
+  - name: "with_aug_e9"
+    checkpoint: "checkpoints/clip_lr5e-05_with_aug"
+    output_dir: "./search_index/with_ag_e9"
+
+  - name: "dora_e9_no_agu_large"
+    checkpoint: "checkpoints/latest"
+    output_dir: "./search_index/dora_e9_no_agu_large"
+
+  - name: "dora_e5_clip_loss"
+    checkpoint: "checkpoints/epoch_5_CLIP_loss"
+    output_dir: "./search_index/dora_with_ag_e5_clip_loss"
